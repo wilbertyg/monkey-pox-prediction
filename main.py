@@ -10,9 +10,9 @@ st.title("Monkey Pox Prediction")
 st.write("")
 st.write("#### Machine Learning Project by")
 left, center, right = st.columns(3)
-left.write("###### 2602089742 - Hany wijaya")
-center.write("###### 2602160510 - Tasya Aulianissa")
-right.write("###### 2602093802 - Wilbert Yang")
+left.write("2602089742 - Hany Wijaya")
+center.write("2602160510 - Tasya Aulianissa")
+right.write("2602093802 - Wilbert Yang")
 
 st.divider()
 
