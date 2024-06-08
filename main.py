@@ -20,7 +20,7 @@ st.image("./assets/monkehehe.jpeg",use_column_width=True)
 
 st.write("### Input Data")
 
-st.write("##### Select the following suffered symptoms (you may select more than 1)")
+st.write("##### Select the following suffered symptoms (you can select more than 1)")
 
 rectal_pain = st.checkbox("[-] Rectal Pain", key='1')
 sore_throat = st.checkbox("[-] Sore Throat", key='2')
