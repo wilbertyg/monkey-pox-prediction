@@ -1,9 +1,10 @@
 import streamlit as st
 import joblib
 
-SVM = joblib.load('SVM.pickle')
-XGB = joblib.load('XGBOOST.pickle')
+SVM = joblib.load('SVC.pickle')
+# XGB = joblib.load('XGBOOST.pickle')
 NB = joblib.load('NB.pickle')
+KNN = joblib.load('KNN.pickle')
 
 st.title("Monkey Pox Prediction")
 
@@ -60,7 +61,7 @@ st.divider()
 
 st.write("### Predict the Result")
 left, right = st.columns(2)
-selected_model = left.selectbox("Select a model to predict the output", ["SVM", "Naive_Bayes","XGBOOST"])
+selected_model = left.selectbox("Select a model to predict the output", ["SVM", "Naive_Bayes","KNN"])
 st.write("")
 predict_btn = st.button(" Predict ")
 
@@ -69,20 +70,28 @@ st.write("")
 def encode_si(x):
     #fever, muscle, none, swollen
     if x == "Fever":
-        return list([1,0,0,0])
+        return list([1,0,0])
     elif x == "Muscle Aches and Pain":
-        return list([0,1,0,0])
+        return list([0,1,0])
     elif x == "Swollen Lymph Nodes":
-        return list([0,0,0,1])
+        return list([0,0,1])
     else:
-        return list([0,0,1,0])
+        return list([0,0,0])
 
-features = input + encode_si(systematic_illness)
+def sum_all(f):
+    a = 0
+    for x in f:
+        a += x
+    return int(a)
+
+feature = input + encode_si(systematic_illness)
+features = feature + [sum_all(feature)]
 
 if predict_btn:
     features = [features]
-    if selected_model == 'XGBOOST':
-        predicted_value = XGB.predict(features)
+    # st.text(features)
+    if selected_model == 'KNN':
+        predicted_value = KNN.predict(features)
     elif selected_model == 'Naive_Bayes':
         predicted_value = NB.predict(features)
     else:
