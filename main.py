@@ -1,10 +1,14 @@
 import streamlit as st
 import joblib
 
-SVM = joblib.load('SVC.pickle')
-# XGB = joblib.load('XGBOOST.pickle')
+SVM = joblib.load('SVM_PCA.pickle')
+PCA = joblib.load('PCA.pickle')
+# XGB = joblib.load('XGB.pickle')
+# LR = joblib.load('Lasso_logreg.pickle')
+# DT = joblib.load('DT.pickle')
 NB = joblib.load('NB.pickle')
 KNN = joblib.load('KNN.pickle')
+
 
 st.title("Monkey Pox Prediction")
 
@@ -61,7 +65,7 @@ st.divider()
 
 st.write("### Predict the Result")
 left, right = st.columns(2)
-selected_model = left.selectbox("Select a model to predict the output", ["SVM", "Naive_Bayes","KNN"])
+selected_model = left.selectbox("Select a model to predict the output", ["Naive_Bayes","KNN","SVM"])
 st.write("")
 predict_btn = st.button(" Predict ")
 
@@ -92,10 +96,11 @@ if predict_btn:
     # st.text(features)
     if selected_model == 'KNN':
         predicted_value = KNN.predict(features)
-    elif selected_model == 'Naive_Bayes':
-        predicted_value = NB.predict(features)
-    else:
+    elif selected_model == 'SVM':
+        features = PCA.transform(features)
         predicted_value = SVM.predict(features)
+    else:
+        predicted_value = NB.predict(features)
 
     st.write(f"Prediction with {selected_model}:")
     if bool(predicted_value):
