@@ -3,7 +3,7 @@ import joblib
 
 SVM = joblib.load('SVC.pickle')
 XGB = joblib.load('XGBoost.pickle')
-LR = joblib.load('logisticReg.pickle')
+LR = joblib.load('LogisticReg.pickle')
 scaler = joblib.load('SCALER.pickle')
 st.title("Monkey Pox Prediction")
 
