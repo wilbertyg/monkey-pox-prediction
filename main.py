@@ -33,7 +33,7 @@ sti = st.checkbox("[-] Sexually Transmitted Infection", key='8')
 
 systematic_illness = st.selectbox(
     "Select the Systemic Illness",
-    ["None", "Fever", "Swollen Lymph Nodes"]
+    ["None", "Fever", "Muscle Aches and Pain", "Swollen Lymph Nodes"]
 )
 
 input = [int(rectal_pain), int(sore_throat), int(penil_oedema), int(oral_lesions), 
@@ -49,15 +49,17 @@ input_display = {
     'HIV Infection':int(hiv_infection),
     'STI':int(sti)
     }
-
 def encode_si(x):
+    global muscle_ache
     #fever, swollen, none
     if x == "Fever":
-        return list([1,0])
+        return list([1,0,0])
+    elif x == "Muscle Aches and Pain":
+        return list([0,1,0])
     elif x == "Swollen Lymph Nodes":
-        return list([0,1])
+        return list([0,0,1])
     else:
-        return list([0,0])
+        return list([0,0,0])
 
 
 st.sidebar.write("")
@@ -65,7 +67,7 @@ st.sidebar.title("Input Tracker")
 for symptom, value in input_display.items():
     st.sidebar.write(f"{symptom}:", bool(value))
 st.sidebar.write("Systemic Illness:", systematic_illness)
-st.sidebar.write(f"Encoded Systemic Illness: [{encode_si(systematic_illness)[0]}, {encode_si(systematic_illness)[1]}]")
+st.sidebar.write(f"Encoded Systemic Illness: [{encode_si(systematic_illness)[0]}, {encode_si(systematic_illness)[1]}, {encode_si(systematic_illness)[2]}]")
 
 st.divider()
 
@@ -87,8 +89,9 @@ feature = input + encode_si(systematic_illness)
 features = feature + [sum_all(feature)]
 
 if predict_btn:
+    features = features[:9] + features[10:]
     features = [features]
-    # st.text(features)
+    st.text(features)
     features = scaler.transform(features)
     if selected_model == 'XGBoost':
         predicted_value = XGB.predict(features)
