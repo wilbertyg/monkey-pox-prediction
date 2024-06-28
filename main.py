@@ -1,15 +1,10 @@
 import streamlit as st
 import joblib
 
-SVM = joblib.load('SVM_PCA.pickle')
-PCA = joblib.load('PCA.pickle')
-# XGB = joblib.load('XGB.pickle')
-# LR = joblib.load('Lasso_logreg.pickle')
-# DT = joblib.load('DT.pickle')
-NB = joblib.load('NB.pickle')
-KNN = joblib.load('KNN.pickle')
-
-
+SVM = joblib.load('SVC.pickle')
+XGB = joblib.load('XGBoost.pickle')
+LR = joblib.load('logisticReg.pickle')
+scaler = joblib.load('SCALER.pickle')
 st.title("Monkey Pox Prediction")
 
 st.write("")
@@ -38,7 +33,7 @@ sti = st.checkbox("[-] Sexually Transmitted Infection", key='8')
 
 systematic_illness = st.selectbox(
     "Select the Systemic Illness",
-    ["None", "Fever", "Swollen Lymph Nodes", "Muscle Aches and Pain"]
+    ["None", "Fever", "Swollen Lymph Nodes"]
 )
 
 input = [int(rectal_pain), int(sore_throat), int(penil_oedema), int(oral_lesions), 
@@ -55,32 +50,32 @@ input_display = {
     'STI':int(sti)
     }
 
+def encode_si(x):
+    #fever, swollen, none
+    if x == "Fever":
+        return list([1,0])
+    elif x == "Swollen Lymph Nodes":
+        return list([0,1])
+    else:
+        return list([0,0])
+
+
 st.sidebar.write("")
 st.sidebar.title("Input Tracker")
 for symptom, value in input_display.items():
     st.sidebar.write(f"{symptom}:", bool(value))
 st.sidebar.write("Systemic Illness:", systematic_illness)
+st.sidebar.write(f"Encoded Systemic Illness: [{encode_si(systematic_illness)[0]}, {encode_si(systematic_illness)[1]}]")
 
 st.divider()
 
 st.write("### Predict the Result")
 left, right = st.columns(2)
-selected_model = left.selectbox("Select a model to predict the output", ["Naive_Bayes","KNN","SVM"])
+selected_model = left.selectbox("Select a model to predict the output", ["XGBoost","SVM","Logistic Regression"])
 st.write("")
 predict_btn = st.button(" Predict ")
 
 st.write("")
-
-def encode_si(x):
-    #fever, muscle, none, swollen
-    if x == "Fever":
-        return list([1,0,0])
-    elif x == "Muscle Aches and Pain":
-        return list([0,1,0])
-    elif x == "Swollen Lymph Nodes":
-        return list([0,0,1])
-    else:
-        return list([0,0,0])
 
 def sum_all(f):
     a = 0
@@ -94,13 +89,13 @@ features = feature + [sum_all(feature)]
 if predict_btn:
     features = [features]
     # st.text(features)
-    if selected_model == 'KNN':
-        predicted_value = KNN.predict(features)
+
+    if selected_model == 'XGBoost':
+        predicted_value = XGB.predict(features)
     elif selected_model == 'SVM':
-        features = PCA.transform(features)
         predicted_value = SVM.predict(features)
     else:
-        predicted_value = NB.predict(features)
+        predicted_value = LR.predict(features)
 
     st.write(f"Prediction with {selected_model}:")
     if bool(predicted_value):
