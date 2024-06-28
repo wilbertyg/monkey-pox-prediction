@@ -89,7 +89,7 @@ features = feature + [sum_all(feature)]
 if predict_btn:
     features = [features]
     # st.text(features)
-
+    features = scaler.transform(features)
     if selected_model == 'XGBoost':
         predicted_value = XGB.predict(features)
     elif selected_model == 'SVM':
