@@ -48,7 +48,8 @@ input_display = {
     'Swollen Tonsils':int(swollen_tonsils),
     'HIV Infection':int(hiv_infection),
     'STI':int(sti)
-    }
+}
+
 def encode_si(x):
     global muscle_ache
     #fever, swollen, none
